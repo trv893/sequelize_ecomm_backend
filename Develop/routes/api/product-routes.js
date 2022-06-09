@@ -29,7 +29,7 @@ router.get('/:id', async(req, res) => {
         include: [{ model: Category }],
       }
     );
-    if (productData.length === 00){
+    if (productData == null){
       res.status(404).json({message: "no records found"});
       return;
     }
@@ -80,6 +80,10 @@ router.put('/:id', (req, res) => {
     },
   })
     .then((product) => {
+      console.log(product);
+      if (product[0] == 0){
+        throw "No records exsist for given id";
+      }
       // find all associated tags from ProductTag
       return ProductTag.findAll({ where: { product_id: req.params.id } });
     })

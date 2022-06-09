@@ -3,6 +3,7 @@ const { Category, Product } = require('../../models');
 
 // The `/api/categories` endpoint
 
+// get all categories
 router.get('/', async(req, res) => {
   try {
     const categoryData = await Category.findAll(
@@ -19,7 +20,7 @@ router.get('/', async(req, res) => {
     res.status(500).json(err);
   }
 });
-
+// get categories by id
 router.get('/:id', async(req, res) => {
   try {
     const categoryData = await Category.findByPk(req.params.id,
@@ -27,7 +28,7 @@ router.get('/:id', async(req, res) => {
         include: [{ model: Product }],
       }
     );
-    if (categoryData.length === 00){
+    if (categoryData == null){
       res.status(404).json({message: "no records found"});
       return;
     }
@@ -36,7 +37,7 @@ router.get('/:id', async(req, res) => {
     res.status(500).json(err);
   }
 });
-
+// create a new category
 router.post('/', async(req, res) => {
   try {
     const categoryData = await Category.create(
@@ -47,7 +48,7 @@ router.post('/', async(req, res) => {
     res.status(500).json(err);
   }
 });
-
+// update a category by id
 router.put('/:id', async(req, res) => {
   try {
     const categoryData = await Category.update(
@@ -58,7 +59,7 @@ router.put('/:id', async(req, res) => {
         }
       }
     );
-    if (!categoryData){
+    if (categoryData[0] == 0){
       res.status(404).json({message: "no records found to update with given id"});
       return;
     }
@@ -67,7 +68,7 @@ router.put('/:id', async(req, res) => {
     res.status(500).json(err);
   }
 });
-
+// delete category by id
 router.delete('/:id', async(req, res) => {
   try {
     const categoryData = await Category.destroy(
@@ -77,6 +78,10 @@ router.delete('/:id', async(req, res) => {
         }
       }
     );
+    if (categoryData == 0){
+      res.status(404).json({message: "no records found to delete with given id"});
+      return;
+    }
     res.json(categoryData);
   } catch (err) {
     res.status(500).json(err);
